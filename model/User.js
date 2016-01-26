@@ -5,8 +5,16 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const User = new Schema({
-  username: String,
-  password: String,
+  username: {
+    type: String,
+    require: true,
+    unique: true,
+    index: true
+  },
+  password: {
+    type: String,
+    require: true
+  },
   isAdmin: Boolean
 });
 
