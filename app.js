@@ -23,7 +23,6 @@ const User = require('./model/User');
 app.set('view engine', 'jade'); //After the view engine is set, you don’t have to specify the engine or load the template engine module in your app; Express loads the module internally. If the view engine property is not set, you must specify the extension of the view file. Otherwise, you can omit it.
 //express view engine is defaulted to read templates from 'views' folder, not public
 
-//environment setups
 app.use(bodyParser.json());
 
 app.use(session({
@@ -39,7 +38,7 @@ app.use(passport.session());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: false}));//helps with parsing form data to get req.body.username and req.body.password
 
-//Link passport with Schema
+//Link passport with Schema (can be put to a separate file)
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -48,7 +47,8 @@ passport.deserializeUser(User.deserializeUser());
 //Mount router to app
 app.use('/', router);
 app.use('/employees', ensureAuthenticated, employeeRouter);
-app.use(ensureAuthenticated, express.static(path.join(__dirname, 'employeeView'))); //employee list can only be accessed by authenticated user
+//employee list can only be accessed by authenticated user
+app.use(ensureAuthenticated, express.static(path.join(__dirname, 'employeeView')));
 
 //404
 app.use((req, res, next) => {
