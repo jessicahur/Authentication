@@ -21,7 +21,9 @@ const User = require('./model/User');
 
 //view engine (http://expressjs.com/en/guide/using-template-engines.html)
 app.set('view engine', 'jade'); //After the view engine is set, you don’t have to specify the engine or load the template engine module in your app; Express loads the module internally. If the view engine property is not set, you must specify the extension of the view file. Otherwise, you can omit it.
-// app.use(express.static(path.join(__dirname, 'public')));//express view engine is defaulted to read templates from 'views' folder, not public
+//express view engine is defaulted to read templates from 'views' folder, not public
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 //environment setups
 app.use(bodyParser.json());
