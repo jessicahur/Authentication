@@ -31,23 +31,33 @@ describe('Session Authentication', () => {
   });
 
   it('should redirect unauthenticated user back to GET /login', done => {
-    chai.request(app)
-        .get('/employees')
-        .end((err, res) => {
-          assert.equal(res.req.path, '/login');
-          done();
-        });
+    chai
+      .request(app)
+      .get('/employees')
+      .end((err, res) => {
+        assert.equal(res.req.path, '/login');
+        done();
+      });
   });
 
-  it('should successfully register testing', done => {
-
+  it('should successfully register testing and get redicted to home page', done => {
+    chai
+      .request(app)
+      .post('/register')
+      .send({username: 'testing', password: 'test'})
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.req.path).to.equal('/');
+        done();
+      });
   });
 
-  it('should login, get an employee cookie and enable GET employee', done => {
+  it('should succesfully login and get redirected to home page', done => {
     chai
       .request(app)
       .post('/login')
-      .send({username: 'jessica', password: '123'})
+      .send({username: 'testing', password: 'test'})
       .end( (err, res) => {
         var redirect = res.redirects[0].split('/');
         var path = redirect[redirect.length-1];
