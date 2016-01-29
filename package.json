@@ -31,7 +31,6 @@
     "kerberos": "0.0.18",
     "mongoose": "^4.3.7",
     "passport": "^0.3.2",
-    "passport-local-mongoose": "^4.0.0",
-    "path": "^0.12.7"
+    "passport-local-mongoose": "^4.0.0"
   }
 }
