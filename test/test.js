@@ -6,12 +6,13 @@ const expect = chai.expect;
 
 const app = require('../app');
 const User = require('../model/User');
+chai.use(chaiHttp);
+const agent = chai.request.agent(app);
 
 const mongoose = require('mongoose');
 
 
 
-chai.use(chaiHttp);
 
 describe('Session Authentication', () => {
 
@@ -34,38 +35,38 @@ describe('Session Authentication', () => {
     chai
       .request(app)
       .get('/employees')
+      .redirects(0)
       .end((err, res) => {
-        assert.equal(res.req.path, '/login');
+        expect(res).to.redirectTo('/login');
+        expect(err).to.be.null;
         done();
       });
   });
 
   it('should successfully register testing and get redicted to home page', done => {
-    chai
-      .request(app)
+    agent
       .post('/register')
       .send({username: 'testing', password: 'test'})
-      .end((err, res) => {
-        expect(err).to.be.null;
-        expect(res).to.have.status(200);
-        expect(res.req.path).to.equal('/');
+      .redirects(0)
+      .then((res) => {
+        expect(res).to.have.status(302);
+        expect(res).to.redirectTo('/');
         done();
-      });
+      })
+      .catch(done);
   });
 
   it('should succesfully login and get redirected to home page', done => {
-    chai
-      .request(app)
+    agent
       .post('/login')
       .send({username: 'testing', password: 'test'})
-      .end( (err, res) => {
-        var redirect = res.redirects[0].split('/');
-        var path = redirect[redirect.length-1];
-        expect(err).to.be.null;
-        expect(res).to.have.status(200);
-        expect(res.req.path).to.equal('/');
+      .redirects(0)
+      .then( (res) => {
+        expect(res).to.have.status(302);
+        expect(res).to.redirectTo('/');
         done();
-      });
+      })
+      .catch(done);
   });
 
 });
